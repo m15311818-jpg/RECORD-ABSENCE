@@ -3,168 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الحضور الذكي - المعهد العالي للهندسة</title>
+    <title>بوابة الحضور - المعهد العالي للهندسة</title>
     <link href="https://jsdelivr.net" rel="stylesheet">
     <style>
         body { 
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #0f2027); 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             min-height: 100vh;
             color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .main-card { 
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px; 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            color: #fff;
-        }
-        .form-control {
             background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff !important;
-            border-radius: 10px;
+            border-radius: 25px; 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 500px;
         }
-        .form-control:focus {
+        .form-control-lg {
             background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #fff !important;
+            border-radius: 15px;
+            font-size: 24px;
+            letter-spacing: 5px;
+            font-weight: bold;
+        }
+        .form-control-lg:focus {
+            background: rgba(255, 255, 255, 0.25);
             border-color: #00d2ff;
-            box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
         }
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+        .form-control-lg::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: normal;
+            font-size: 18px;
         }
-        .nav-pills .nav-link {
-            color: rgba(255, 255, 255, 0.7);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-        .nav-pills .nav-link.active { 
-            background: linear-gradient(45deg, #00c6ff, #0072ff);
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
-        }
-        .btn-modern-primary {
+        .btn-modern {
             background: linear-gradient(45deg, #00c6ff, #0072ff);
             border: none;
             color: #fff;
-            border-radius: 12px;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 20px;
             transition: all 0.3s ease;
         }
-        .btn-modern-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+        .btn-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 114, 255, 0.5);
             color: #fff;
         }
-        .btn-modern-success {
-            background: linear-gradient(45deg, #11998e, #38ef7d);
-            border: none;
-            color: #fff;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-        .btn-modern-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
-            color: #fff;
-        }
-        .student-row { 
-            background: rgba(255, 255, 255, 0.05); 
-            padding: 12px 20px; 
-            border-radius: 12px; 
-            margin-bottom: 8px; 
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .alert-custom-info {
-            background: rgba(0, 198, 255, 0.15);
-            border: 1px solid #00c6ff;
-            color: #00d2ff;
-            border-radius: 12px;
+        .engineering-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #00c6ff;
         }
     </style>
 </head>
 <body>
 
-<div class="container my-5">
-    <div class="text-center mb-5">
-        <h1 class="fw-bold" style="background: linear-gradient(to right, #00c6ff, #0072ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">المعهد العالي للهندسة</h1>
-        <p class="text-light-50 fs-5">بوابة الحضور الرقمية الذكية للمحاضرات</p>
-    </div>
-
-    <!-- مفاتيح التبديل العصرية -->
-    <ul class="nav nav-pills nav-justified p-2 bg-dark bg-opacity-20 rounded-3 mb-5" id="pills-tab" role="tablist" style="border: 1px solid rgba(255,255,255,0.05);">
-        <li class="nav-item">
-            <button class="nav-link active fw-bold fs-5" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-view">بوابة الطالب</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link fw-bold fs-5" id="professor-tab" data-bs-toggle="pill" data-bs-target="#professor-view">لوحة الأستاذ</button>
-        </li>
-    </ul>
-
-    <div class="tab-content" id="pills-tabContent">
-        <!-- واجهة الطالب -->
-        <div class="tab-pane fade show active" id="student-view">
-            <div class="main-card p-4 col-lg-6 mx-auto">
-                <h3 class="mb-4 text-center fw-bold">تسجيل حضور الجلسة</h3>
-                <div id="lectureAlert" class="alert alert-custom-info text-center d-none">
-                    المادة النشطة حالياً: <strong id="studentViewSubject">--</strong>
-                </div>
-                <form id="studentForm">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-white-50">كود الطالب الأكاديمي (6 أرقام)</label>
-                        <input type="text" id="studentIdInput" maxlength="6" pattern="\d{6}" class="form-control form-control-lg text-center" required placeholder="أدخل أي 6 أرقام">
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold small text-white-50">كود أمان المحاضرة الحالي</label>
-                        <input type="text" id="lectureCodeInput" class="form-control form-control-lg text-center" required placeholder="اطلب الكود من الدكتور">
-                    </div>
-                    <button type="submit" class="btn btn-modern-primary w-100 py-3 fw-bold fs-5">تأكيد حضورك الآن</button>
-                </form>
+<div class="container d-flex justify-content-center">
+    <div class="main-card text-center">
+        <div class="engineering-icon">📐</div>
+        <h2 class="fw-bold mb-2">المعهد العالي للهندسة</h2>
+        <p class="text-white-50 mb-4">نظام تسجيل حضور الطلاب الذكي</p>
+        
+        <form id="studentForm">
+            <div class="mb-4 text-start">
+                <label class="form-label fw-bold small text-white-50 ps-2">أدخل كودك الأكاديمي (6 أرقام)</label>
+                <input type="text" id="studentIdInput" maxlength="6" pattern="\d{6}" class="form-control form-control-lg text-center" required placeholder="000000">
             </div>
-        </div>
-
-        <!-- واجهة الأستاذ والكشف -->
-        <div class="tab-pane fade" id="professor-view">
-            <div class="main-card p-4 mb-4">
-                <h3 class="mb-4 text-center fw-bold" style="color: #38ef7d;">تجهيز محاضرة جديدة</h3>
-                <form id="profForm">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold small text-white-50">اسم المادة الهندسية</label>
-                            <input type="text" id="subjectName" class="form-control form-control-lg" required placeholder="مثال: ديناميكا منشآت">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold small text-white-50">كود الأمان المقترح للمحاضرة</label>
-                            <input type="text" id="profLectureCode" class="form-control form-control-lg" required placeholder="مثال: X99">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-modern-success w-100 py-3 fw-bold fs-5 mt-2">تفعيل الجلسة (صلاحية 12 ساعة)</button>
-                </form>
-            </div>
-
-            <!-- قائمة الحضور المستلمة في المتصفح -->
-            <div class="main-card p-4">
-                <h4 class="mb-4 fw-bold text-center" style="color: #00c6ff;">كشف حضور الطلاب التلقائي</h4>
-                <div id="attendanceList" class="p-1" style="max-height: 350px; overflow-y: auto;">
-                    <p class="text-white-50 text-center py-4" id="noStudentsMsg">لا توجد تسجيلات حضور نشطة لهذه المحاضرة حتى الآن.</p>
-                </div>
-            </div>
-        </div>
+            <button type="submit" class="btn btn-modern w-100 fw-bold">تأكيد تسجيل الحضور الآن</button>
+        </form>
     </div>
 </div>
 
 <script>
-    // دالة لتوليد صوت الإشعار برمجياً (مثل نغمة رسائل التطبيقات)
+    // دالة النغمة الصوتية المميزة عند تأكيد الحضور
     function playNotificationSound() {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            
-            // النوتة الأولى (منخفضة)
             const osc1 = audioCtx.createOscillator();
             const gain1 = audioCtx.createGain();
             osc1.type = 'sine';
-            osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime); // نغمة D5
+            osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime);
             osc1.connect(gain1);
             gain1.connect(audioCtx.destination);
             gain1.gain.setValueAtTime(0.1, audioCtx.currentTime);
@@ -172,12 +100,11 @@
             osc1.start();
             osc1.stop(audioCtx.currentTime + 0.15);
             
-            // النوتة الثانية (مرتفعة وسريعة تليها مباشرة لتصنع صوت "تنّ!")
             setTimeout(() => {
                 const osc2 = audioCtx.createOscillator();
                 const gain2 = audioCtx.createGain();
                 osc2.type = 'sine';
-                osc2.frequency.setValueAtTime(880, audioCtx.currentTime); // نغمة A5
+                osc2.frequency.setValueAtTime(880, audioCtx.currentTime);
                 osc2.connect(gain2);
                 gain2.connect(audioCtx.destination);
                 gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
@@ -185,38 +112,68 @@
                 osc2.start();
                 osc2.stop(audioCtx.currentTime + 0.25);
             }, 100);
-        } catch(e) {
-            console.log("Audio not supported or blocked by browser settings", e);
-        }
+        } catch(e) { console.log(e); }
     }
 
-    // دالة التحقق التلقائي ومسح البيانات بعد 12 ساعة
+    // دالة الحذف والمسح التلقائي بعد 12 ساعة
     function checkExpiration() {
         const startTime = localStorage.getItem('lectureStartTime');
         if (startTime) {
             const currentTime = new Date().getTime();
             const twelveHoursInMs = 12 * 60 * 60 * 1000;
-            
             if ((currentTime - startTime) > twelveHoursInMs) {
-                localStorage.removeItem('activeSubject');
-                localStorage.removeItem('activeCode');
-                localStorage.removeItem('lectureStartTime');
                 localStorage.removeItem('attendanceRecords');
-                alert("تنبيه نظام الأمان: انتهت صلاحية الجلسة المحددة بـ 12 ساعة، وتم تصفير الكشوفات تلقائياً.");
+                localStorage.removeItem('lectureStartTime');
             }
         }
     }
 
-    // تحديث عناصر الشاشات بانتظام
-    function updateUI() {
+    // معالجة الضغط وإرسال البيانات
+    document.getElementById('studentForm').addEventListener('submit', (e) => {
+        e.preventDefault();
         checkExpiration();
-        const subject = localStorage.getItem('activeSubject');
-        const attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
 
-        if (subject) {
-            document.getElementById('lectureAlert').classList.remove('d-none');
-            document.getElementById('studentViewSubject').innerText = subject;
-        } else {
-            document.getElementById('lectureAlert').classList.add('d-none');
+        const inputVal = document.getElementById('studentIdInput').value;
+        const studentId = parseInt(inputVal);
+
+        if (inputVal.length !== 6 || isNaN(studentId)) {
+            alert("خطأ: يجب أن يتكون الكود الأكاديمي من 6 أرقام تماماً!");
+            return;
         }
 
+        // جلب السجلات الحالية أو إنشاء قائمة جديدة
+        let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+        
+        // إذا كانت القائمة فارغة تماماً (أول طالب يسجل)، نضبط مؤقت الـ 12 ساعة من الآن
+        if (attendanceRecords.length === 0) {
+            localStorage.setItem('lectureStartTime', new Date().getTime());
+        }
+
+        // منع الطالب من تسجيل نفسه مرتين
+        const alreadyRegistered = attendanceRecords.some(rec => rec.id === studentId);
+        if (alreadyRegistered) {
+            alert("تنبيه: لقد تم تسجيل حضور هذا الكود مسبقاً في هذه الجلسة!");
+            return;
+        }
+
+        // إضافة الطالب الجديد
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+        attendanceRecords.push({ id: studentId, time: timeString });
+        
+        // حفظ البيانات في ذاكرة الهاتف/الموقع بشكل دائم ومستمر
+        localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+
+        // تشغيل صوت الإرسال بنجاح
+        playNotificationSound();
+
+        alert(`تم رصد وتأكيد حضورك بنجاح ✅`);
+        document.getElementById('studentForm').reset();
+    });
+
+    window.onload = checkExpiration;
+</script>
+
+<script src="https://jsdelivr.net"></script>
+</body>
+</html>
