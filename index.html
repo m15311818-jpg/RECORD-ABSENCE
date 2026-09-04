@@ -6,76 +6,148 @@
     <title>نظام الحضور الذكي - المعهد العالي للهندسة</title>
     <link href="https://jsdelivr.net" rel="stylesheet">
     <style>
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .nav-pills .nav-link.active { background-color: #0d6efd; }
-        .student-row { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        body { 
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            min-height: 100vh;
+            color: #fff;
+        }
+        .main-card { 
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff !important;
+            border-radius: 10px;
+        }
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #00d2ff;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+        }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .nav-pills .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .nav-pills .nav-link.active { 
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
+        }
+        .btn-modern-primary {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            border: none;
+            color: #fff;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .btn-modern-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+            color: #fff;
+        }
+        .btn-modern-success {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            border: none;
+            color: #fff;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        .btn-modern-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
+            color: #fff;
+        }
+        .student-row { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            margin-bottom: 8px; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .alert-custom-info {
+            background: rgba(0, 198, 255, 0.15);
+            border: 1px solid #00c6ff;
+            color: #00d2ff;
+            border-radius: 12px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container my-4">
-    <div class="text-center mb-4">
-        <h2 class="fw-bold text-primary">المعهد العالي للهندسة</h2>
-        <p class="text-muted">نظام تسجيل حضور الطلاب الداخلي (صلاحية الجلسة 12 ساعة)</p>
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold" style="background: linear-gradient(to right, #00c6ff, #0072ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">المعهد العالي للهندسة</h1>
+        <p class="text-light-50 fs-5">بوابة الحضور الرقمية الذكية للمحاضرات</p>
     </div>
 
-    <!-- التبديل بين الواجهات -->
-    <ul class="nav nav-pills nav-justified mb-4" id="pills-tab" role="tablist">
+    <!-- مفاتيح التبديل العصرية -->
+    <ul class="nav nav-pills nav-justified p-2 bg-dark bg-opacity-20 rounded-3 mb-5" id="pills-tab" role="tablist" style="border: 1px solid rgba(255,255,255,0.05);">
         <li class="nav-item">
-            <button class="nav-link active fw-bold" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-view">بوابة الطالب</button>
+            <button class="nav-link active fw-bold fs-5" id="student-tab" data-bs-toggle="pill" data-bs-target="#student-view">بوابة الطالب</button>
         </li>
         <li class="nav-item">
-            <button class="nav-link fw-bold" id="professor-tab" data-bs-toggle="pill" data-bs-target="#professor-view">بوابة الأستاذ ورصد الحضور</button>
+            <button class="nav-link fw-bold fs-5" id="professor-tab" data-bs-toggle="pill" data-bs-target="#professor-view">لوحة الأستاذ</button>
         </li>
     </ul>
 
     <div class="tab-content" id="pills-tabContent">
         <!-- واجهة الطالب -->
         <div class="tab-pane fade show active" id="student-view">
-            <div class="card p-4">
-                <h4 class="mb-3 text-center text-secondary">تسجيل حضورك في المحاضرة</h4>
-                <div id="lectureAlert" class="alert alert-warning text-center d-none">
+            <div class="main-card p-4 col-lg-6 mx-auto">
+                <h3 class="mb-4 text-center fw-bold">تسجيل حضور الجلسة</h3>
+                <div id="lectureAlert" class="alert alert-custom-info text-center d-none">
                     المادة النشطة حالياً: <strong id="studentViewSubject">--</strong>
                 </div>
                 <form id="studentForm">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">الكود الأكاديمي للطالب (6 أرقام)</label>
-                        <input type="text" id="studentIdInput" maxlength="6" pattern="\d{6}" class="form-control form-control-lg" required placeholder="أدخل كودك المكون من 6 أرقام بدقة">
+                        <label class="form-label fw-bold small text-white-50">كود الطالب الأكاديمي (6 أرقام)</label>
+                        <input type="text" id="studentIdInput" maxlength="6" pattern="\d{6}" class="form-control form-control-lg text-center" required placeholder="أدخل أي 6 أرقام">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">كود المحاضرة (من الدكتور)</label>
-                        <input type="text" id="lectureCodeInput" class="form-control form-control-lg" required placeholder="أدخل كود الأمان للمحاضرة الحالية">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-white-50">كود أمان المحاضرة الحالي</label>
+                        <input type="text" id="lectureCodeInput" class="form-control form-control-lg text-center" required placeholder="اطلب الكود من الدكتور">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold fs-5">تسجيل الحضور الآن</button>
+                    <button type="submit" class="btn btn-modern-primary w-100 py-3 fw-bold fs-5">تأكيد حضورك الآن</button>
                 </form>
             </div>
         </div>
 
-        <!-- واجهة الأستاذ وحفظ الحضور -->
+        <!-- واجهة الأستاذ والكشف -->
         <div class="tab-pane fade" id="professor-view">
-            <div class="card p-4 mb-4">
-                <h4 class="mb-3 text-center text-success">لوحة تهيئة المحاضرة الجديدة</h4>
+            <div class="main-card p-4 mb-4">
+                <h3 class="mb-4 text-center fw-bold" style="color: #38ef7d;">تجهيز محاضرة جديدة</h3>
                 <form id="profForm">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">اسم المادة</label>
-                            <input type="text" id="subjectName" class="form-control" required placeholder="مثال: هندسة إنشائية، رياضيات 2">
+                            <label class="form-label fw-bold small text-white-50">اسم المادة الهندسية</label>
+                            <input type="text" id="subjectName" class="form-control form-control-lg" required placeholder="مثال: ديناميكا منشآت">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">كود أمان المحاضرة</label>
-                            <input type="text" id="profLectureCode" class="form-control" required placeholder="تعيين كود ليدخل به الطلاب">
+                            <label class="form-label fw-bold small text-white-50">كود الأمان المقترح للمحاضرة</label>
+                            <input type="text" id="profLectureCode" class="form-control form-control-lg" required placeholder="مثال: X99">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success w-100 py-2 fw-bold">تفعيل المحاضرة وبدء مؤقت الـ 12 ساعة</button>
+                    <button type="submit" class="btn btn-modern-success w-100 py-3 fw-bold fs-5 mt-2">تفعيل الجلسة (صلاحية 12 ساعة)</button>
                 </form>
             </div>
 
-            <!-- كشف الطلاب الذين حضروا -->
-            <div class="card p-4">
-                <h4 class="mb-3 text-primary text-center">كشف حضور الطلاب للمحاضرة الحالية</h4>
-                <div id="attendanceList" class="p-2" style="max-height: 300px; overflow-y: auto;">
-                    <p class="text-muted text-center" id="noStudentsMsg">لم يتم تسجيل أي حضور حتى الآن.</p>
+            <!-- قائمة الحضور المستلمة في المتصفح -->
+            <div class="main-card p-4">
+                <h4 class="mb-4 fw-bold text-center" style="color: #00c6ff;">كشف حضور الطلاب التلقائي</h4>
+                <div id="attendanceList" class="p-1" style="max-height: 350px; overflow-y: auto;">
+                    <p class="text-white-50 text-center py-4" id="noStudentsMsg">لا توجد تسجيلات حضور نشطة لهذه المحاضرة حتى الآن.</p>
                 </div>
             </div>
         </div>
@@ -83,135 +155,68 @@
 </div>
 
 <script>
-    // 1️⃣ قاعدة بيانات الطلاب الثابتة بالمعهد (تم تحديثها لأكواد مكونة من 6 أرقام)
-    // يمكنك تعديل هذه الأرقام أو مسحها وكتابة الأرقام الفعلية لطلاب المعهد هنا
-    const VALID_STUDENT_CODES = [
-        100001, 100002, 100003, 100004, 100005, 100006, 100007, 100008, 100009, 100010,
-        200001, 200002, 200003, 200004, 200005, 300001, 300002, 400001, 500001, 600001
-    ];
+    // دالة لتوليد صوت الإشعار برمجياً (مثل نغمة رسائل التطبيقات)
+    function playNotificationSound() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // النوتة الأولى (منخفضة)
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime); // نغمة D5
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            gain1.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            osc1.start();
+            osc1.stop(audioCtx.currentTime + 0.15);
+            
+            // النوتة الثانية (مرتفعة وسريعة تليها مباشرة لتصنع صوت "تنّ!")
+            setTimeout(() => {
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(880, audioCtx.currentTime); // نغمة A5
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                osc2.start();
+                osc2.stop(audioCtx.currentTime + 0.25);
+            }, 100);
+        } catch(e) {
+            console.log("Audio not supported or blocked by browser settings", e);
+        }
+    }
 
-    // دالة للتحقق من مرور 12 ساعة ومسح البيانات تلقائياً
+    // دالة التحقق التلقائي ومسح البيانات بعد 12 ساعة
     function checkExpiration() {
         const startTime = localStorage.getItem('lectureStartTime');
         if (startTime) {
             const currentTime = new Date().getTime();
-            const twelveHoursInMs = 12 * 60 * 60 * 1000; // 12 ساعة بالملي ثانية
+            const twelveHoursInMs = 12 * 60 * 60 * 1000;
             
             if ((currentTime - startTime) > twelveHoursInMs) {
-                // تصفير الجلسة تماماً بعد مرور الوقت المحدد
                 localStorage.removeItem('activeSubject');
                 localStorage.removeItem('activeCode');
                 localStorage.removeItem('lectureStartTime');
                 localStorage.removeItem('attendanceRecords');
-                alert("انتهت صلاحية المحاضرة السابقة (12 ساعة) وتم تصفير النظام تلقائياً.");
+                alert("تنبيه نظام الأمان: انتهت صلاحية الجلسة المحددة بـ 12 ساعة، وتم تصفير الكشوفات تلقائياً.");
             }
         }
     }
 
-    // تحديث الواجهة بناءً على البيانات المخزنة
+    // تحديث عناصر الشاشات بانتظام
     function updateUI() {
         checkExpiration();
         const subject = localStorage.getItem('activeSubject');
         const attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
 
-        // تحديث شاشة الطالب
         if (subject) {
             document.getElementById('lectureAlert').classList.remove('d-none');
             document.getElementById('studentViewSubject').innerText = subject;
         } else {
             document.getElementById('lectureAlert').classList.add('d-none');
         }
-
-        // تحديث كشف حضور الأستاذ
-        const listDiv = document.getElementById('attendanceList');
-        listDiv.innerHTML = ""; 
-        
-        if (attendanceRecords.length > 0) {
-            attendanceRecords.forEach(rec => {
-                listDiv.innerHTML += `
-                    <div class="student-row d-flex justify-content-between align-items-center">
-                        <span class="fw-bold text-dark">كود الطالب: ${rec.id}</span>
-                        <span class="badge bg-secondary">${rec.time}</span>
-                    </div>`;
-            });
-        } else {
-            listDiv.innerHTML = '<p class="text-muted text-center" id="noStudentsMsg">لم يتم تسجيل أي حضور حتى الآن.</p>';
-        }
-    }
-
-    // حفظ إعدادات المحاضرة من قبل الأستاذ
-    document.getElementById('profForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const subject = document.getElementById('subjectName').value;
-        const code = document.getElementById('profLectureCode').value;
-
-        localStorage.setItem('activeSubject', subject);
-        localStorage.setItem('activeCode', code);
-        localStorage.setItem('lectureStartTime', new Date().getTime());
-        localStorage.setItem('attendanceRecords', JSON.stringify([])); // تصفير كشف الحضور القديم
-
-        alert("تم تفعيل المحاضرة بنجاح وبدء مؤقت الـ 12 ساعة لهذه المادة!");
-        updateUI();
-        document.getElementById('profForm').reset();
-    });
-
-    // تسجيل الطالب للحضور
-    document.getElementById('studentForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        checkExpiration();
-
-        const inputVal = document.getElementById('studentIdInput').value;
-        const studentId = parseInt(inputVal);
-        const enteredCode = document.getElementById('lectureCodeInput').value;
-
-        const activeSubject = localStorage.getItem('activeSubject');
-        const activeCode = localStorage.getItem('activeCode');
-
-        // تحقق إضافي من طول الكود في الجافاسكريبت
-        if (inputVal.length !== 6) {
-            alert("خطأ: يجب أن يتكون الكود الأكاديمي من 6 أرقام تماماً!");
-            return;
-        }
-
-        // أمان 1: التحقق من وجود محاضرة نشطة
-        if (!activeSubject || !activeCode) {
-            alert("خطأ: لا توجد محاضرة نشطة حالياً ليتم التسجيل بها!");
-            return;
-        }
-
-        // أمان 2: التحقق من كود المحاضرة السري
-        if (enteredCode !== activeCode) {
-            alert("خطأ: كود المحاضرة غير صحيح، يرجى مراجعة الأستاذ!");
-            return;
-        }
-
-        // أمان 3: التحقق من وجود الكود في قاعدة بيانات المعهد
-        if (!VALID_STUDENT_CODES.includes(studentId)) {
-            alert("خطأ: هذا الكود المكون من 6 أرقام غير مسجل في قاعدة بيانات المعهد!");
-            return;
-        }
-
-        // أمان 4: منع الطالب من تسجيل نفسه مرتين
-        let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
-        const alreadyRegistered = attendanceRecords.some(rec => rec.id === studentId);
-        if (alreadyRegistered) {
-            alert("تنبيه: لقد قمت بتسجيل حضورك بالفعل في هذه المحاضرة!");
-            return;
-        }
-
-        // إذا نجحت الشروط يتم الحفظ
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-        
-        attendanceRecords.push({ id: studentId, time: timeString });
-        localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
-
-        alert(`تم تسجيل حضورك بنجاح في مادة (${activeSubject}) ✅`);
-        document.getElementById('studentForm').reset();
-        updateUI();
-    });
-
-    // تشغيل التحديثات عند فتح الصفحة مباشرة
-    window.onload = updateUI;
-</script>
 
