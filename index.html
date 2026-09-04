@@ -3,221 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الحضور الذكي - المعهد العالي للهندسة</title>
+    <title>نظام الحضور - المعهد العالي للهندسة</title>
     <link href="https://jsdelivr.net" rel="stylesheet">
     <style>
         body { 
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Segoe UI', sans-serif; 
             min-height: 100vh;
             color: #fff;
-            padding: 30px 0;
+            padding: 30px 20px;
         }
-        .main-card { 
+        .my-box { 
             background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 25px; 
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            border-radius: 20px; 
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         .form-control-lg {
             background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             color: #fff !important;
-            border-radius: 15px;
+            border-radius: 12px;
             font-weight: bold;
         }
         .form-control-lg:focus {
             background: rgba(255, 255, 255, 0.2);
             border-color: #00d2ff;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
-        }
-        .btn-modern-primary {
-            background: linear-gradient(45deg, #00c6ff, #0072ff);
-            border: none; color: #fff; border-radius: 15px; padding: 15px;
-            font-weight: bold;
-        }
-        .btn-modern-success {
-            background: linear-gradient(45deg, #11998e, #38ef7d);
-            border: none; color: #fff; border-radius: 15px; padding: 15px;
-            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
         }
         .student-row { 
-            background: rgba(255, 255, 255, 0.05); 
-            padding: 12px 20px; border-radius: 12px; margin-bottom: 8px; 
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .alert-custom {
-            background: rgba(0, 198, 255, 0.15); border: 1px solid #00c6ff; color: #00d2ff; border-radius: 15px;
-        }
-        .btn-settings {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255,255,255,0.4); border-radius: 10px; padding: 5px 15px; font-size: 12px;
+            background: rgba(0, 198, 255, 0.1); 
+            padding: 12px; 
+            border-radius: 10px; 
+            margin-bottom: 8px; 
+            border: 1px solid rgba(0, 198, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="text-center mb-4">
-        <h1 class="fw-bold" style="background: linear-gradient(to right, #00c6ff, #0072ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">المعهد العالي للهندسة</h1>
-        <p class="text-white-50">نظام الحضور الرقمي للمحاضرات</p>
-    </div>
+<div class="container text-center">
+    <h1 class="fw-bold mb-4" style="color: #00c6ff;">المعهد العالي للهندسة</h1>
 
-    <!-- 1️⃣ لوحة إعداد الدكتور -->
-    <div id="profSetupArea" class="main-card p-4 col-lg-6 mx-auto mb-4" style="display: block;">
-        <h3 class="mb-4 text-center fw-bold" style="color: #38ef7d;">تهيئة محاضرة جديدة</h3>
-        <div class="mb-3">
-            <label class="form-label fw-bold small text-white-50">اسم المادة / المحاضرة</label>
-            <input type="text" id="subjectName" class="form-control form-control-lg" placeholder="مثال: هندسة إنشائية">
-        </div>
-        <div class="mb-4">
-            <label class="form-label fw-bold small text-white-50">رمز الأمان السري للمحاضرة</label>
-            <input type="password" id="profSecretCode" class="form-control form-control-lg text-center" placeholder="أدخل الرقم السري للقفل">
-        </div>
-        <button type="button" onclick="startLectureNow()" class="btn btn-modern-success w-100 fs-5">تسجيل محاضرة جديدة وبدء الرصد</button>
-    </div>
-
-    <!-- 2️⃣ شاشة تسجيل الطالب -->
-    <div id="studentFormArea" class="main-card p-4 col-lg-6 mx-auto mb-4" style="display: none;">
-        <h3 class="mb-3 text-center fw-bold">تسجيل حضور الجلسة</h3>
-        <div class="alert alert-custom text-center mb-4">
-            المادة النشطة الآن: <strong id="currentActiveSubject">--</strong>
+    <!-- 1️⃣ شاشة الدكتور (تظهر في البداية فقط) -->
+    <div id="doctorView" class="my-box col-md-6 mx-auto mb-4" style="display: block;">
+        <h3 class="mb-4 text-success fw-bold">تهيئة محاضرة جديدة</h3>
+        <div class="mb-3 text-start">
+            <label class="form-label text-white-50 small">اسم المحاضرة / المادة</label>
+            <input type="text" id="subjectInput" class="form-control form-control-lg" placeholder="مثال: هندسة اتصالات">
         </div>
         <div class="mb-4 text-start">
-            <label class="form-label fw-bold small text-white-50 ps-2">أدخل كودك الأكاديمي (6 أرقام)</label>
-            <input type="text" id="studentIdInput" maxlength="6" class="form-control form-control-lg text-center fs-3" placeholder="000000">
+            <label class="form-label text-white-50 small">رمز الأمان السري للمحاضرة</label>
+            <input type="password" id="secretInput" class="form-control form-control-lg text-center" placeholder="أدخل الرقم السري">
         </div>
-        <button type="button" onclick="submitStudentAttendance()" class="btn btn-modern-primary w-100 fs-5">تأكيد حضورك الآن</button>
+        <button type="button" onclick="activateLecture()" class="btn btn-success w-100 py-3 fw-bold fs-5">تسجيل محاضرة جديدة وبدء الرصد</button>
     </div>
 
-    <!-- 3️⃣ كشف حضور الطلاب بالأسفل مباشرة -->
-    <div id="attendanceReportArea" class="main-card p-4 col-lg-6 mx-auto" style="display: none;">
-        <h4 class="mb-4 fw-bold text-center" style="color: #00c6ff;">📋 الطلاب الحاضرين حالياً</h4>
+    <!-- 2️⃣ شاشة تسجيل الطالب (تظهر بعد ضغط الدكتور) -->
+    <div id="studentView" class="my-box col-md-6 mx-auto mb-4" style="display: none;">
+        <h3 class="mb-2 fw-bold">بوابة تسجيل الطلاب</h3>
+        <p class="text-info mb-4 fs-5">المادة الحالية: <strong id="activeSubjectName">--</strong></p>
+        
+        <div class="mb-4 text-start">
+            <label class="form-label text-white-50 small">أدخل كود الطالب الأكاديمي (6 أرقام)</label>
+            <input type="text" id="studentCodeInput" maxlength="6" class="form-control form-control-lg text-center fs-3" placeholder="000000">
+        </div>
+        <button type="button" onclick="recordStudent()" class="btn btn-primary w-100 py-3 fw-bold fs-5" style="background: linear-gradient(45deg, #00c6ff, #0072ff); border: none;">تأكيد حضورك الآن</button>
+    </div>
+
+    <!-- 3️⃣ كشف الحضور بالأسفل (يظهر مع شاشة الطالب مباشرة) -->
+    <div id="reportView" class="my-box col-md-6 mx-auto" style="display: none;">
+        <h4 class="mb-3 fw-bold text-info">📋 الطلاب الذين تم رصدهم بالأسفل</h4>
         <div id="attendanceList" style="max-height: 300px; overflow-y: auto;">
-            <!-- القائمة تظهر هنا -->
+            <!-- الأكواد ستنزل هنا متتالية فوراً -->
         </div>
     </div>
 
-    <!-- زر إنهاء المحاضرة للعودة للبداية -->
-    <div class="text-center mt-5">
-        <button class="btn btn-settings" onclick="resetSystemManual()">⚙️ إنهاء المحاضرة الحالية</button>
+    <!-- زر إنهاء المحاضرة للعودة لشاشة الدكتور -->
+    <div class="mt-5">
+        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="endLectureManual()">⚙️ إنهاء المحاضرة الحالية</button>
     </div>
 </div>
 
 <script>
-    // دالة الصوت المميز عند التسجيل
-    function playNotificationSound() {
+    // دالة الصوت عند النجاح
+    function makeTone() {
         try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc1 = audioCtx.createOscillator();
-            const gain1 = audioCtx.createGain();
-            osc1.type = 'sine';
-            osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-            osc1.connect(gain1); gain1.connect(audioCtx.destination);
-            gain1.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-            osc1.start(); osc1.stop(audioCtx.currentTime + 0.15);
-            
-            setTimeout(() => {
-                const osc2 = audioCtx.createOscillator();
-                const gain2 = audioCtx.createGain();
-                osc2.type = 'sine';
-                osc2.frequency.setValueAtTime(880, audioCtx.currentTime);
-                osc2.connect(gain2); gain2.connect(audioCtx.destination);
-                gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
-                osc2.start(); osc2.stop(audioCtx.currentTime + 0.25);
-            }, 100);
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+            osc.start(); osc.stop(ctx.currentTime + 0.2);
         } catch(e) { console.log(e); }
     }
 
-    // فحص الـ 12 ساعة ومسح البيانات تلقائياً
-    function checkExpiration() {
-        const startTime = localStorage.getItem('lectureStartTime');
-        if (startTime) {
-            const currentTime = new Date().getTime();
-            const twelveHoursInMs = 12 * 60 * 60 * 1000;
-            if ((currentTime - startTime) > twelveHoursInMs) {
-                clearAllData();
+    // دالة التحقق من الـ 12 ساعة
+    function checkTimeExpired() {
+        const start = localStorage.getItem('lect_start');
+        if (start) {
+            const now = new Date().getTime();
+            if ((now - start) > (12 * 60 * 60 * 1000)) {
+                localStorage.clear();
             }
         }
     }
 
-    function clearAllData() {
-        localStorage.removeItem('activeSubject');
-        localStorage.removeItem('systemSecretCode');
-        localStorage.removeItem('lectureStartTime');
-        localStorage.removeItem('attendanceRecords');
-    }
+    // لتحديث الشاشة عند تحميل الصفحة بناء على الذاكرة
+    function refreshScreen() {
+        checkTimeExpired();
+        const activeSub = localStorage.getItem('lect_sub');
+        const records = JSON.parse(localStorage.getItem('lect_records')) || [];
 
-    // تحديث الشاشات والبيانات بالتبديل المباشر الصريح
-    function updateUI() {
-        checkExpiration();
-        const subject = localStorage.getItem('activeSubject');
-        const records = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+        if (activeSub) {
+            document.getElementById('doctorView').style.display = 'none';
+            document.getElementById('studentView').style.display = 'block';
+            document.getElementById('reportView').style.display = 'block';
+            document.getElementById('activeSubjectName').innerText = activeSub;
 
-        const setupArea = document.getElementById('profSetupArea');
-        const studentArea = document.getElementById('studentFormArea');
-        const reportArea = document.getElementById('attendanceReportArea');
-        const listDiv = document.getElementById('attendanceList');
-
-        if (subject) {
-            setupArea.style.display = 'none';
-            studentArea.style.display = 'block';
-            reportArea.style.display = 'block';
-            document.getElementById('currentActiveSubject').innerText = subject;
-
+            const listDiv = document.getElementById('attendanceList');
             listDiv.innerHTML = "";
             if (records.length === 0) {
-                listDiv.innerHTML = "<p class='text-white-50 text-center py-3'>لا توجد تسجيلات حضور حتى الآن.</p>";
+                listDiv.innerHTML = "<p class='text-white-50 py-2'>لا يوجد حضور مسجل حتى الآن.</p>";
             } else {
-                records.forEach((rec, idx) => {
+                records.forEach((rec, index) => {
                     listDiv.innerHTML += `
-                        <div class="student-row d-flex justify-content-between align-items-center">
-                            <span class="fw-bold" style="color: #00d2ff;">👤 م: ${idx+1} &nbsp;|&nbsp; كود الطالب: ${rec.id}</span>
-                            <span class="badge bg-light bg-opacity-10 text-white-50 p-2">⏰ ${rec.time}</span>
+                        <div class="student-row">
+                            <span class="fw-bold">👤 م: ${index+1} | كود الطالب: ${rec.id}</span>
+                            <span class="text-white-50 small">⏰ ${rec.time}</span>
                         </div>`;
                 });
             }
         } else {
-            setupArea.style.display = 'block';
-            studentArea.style.display = 'none';
-            reportArea.style.display = 'none';
+            document.getElementById('doctorView').style.display = 'block';
+            document.getElementById('studentView').style.display = 'none';
+            document.getElementById('reportView').style.display = 'none';
         }
     }
 
-    // الضغط الذكي لبدء المحاضرة (بدون فورم لتجنب الريفرش)
-    function startLectureNow() {
-        const subject = document.getElementById('subjectName').value.trim();
-        const secret = document.getElementById('profSecretCode').value.trim();
+    // ضغطة الدكتور: تفعيل فوري والانتقال بدون ريفريش
+    function activateLecture() {
+        const sub = document.getElementById('subjectInput').value.trim();
+        const pass = document.getElementById('secretInput').value.trim();
 
-        if (!subject || !secret) {
-            alert("خطأ: يرجى ملء اسم المادة ورمز الأمان أولاً!");
+        if (!sub || !pass) {
+            alert("من فضلك أدخل اسم المادة والرقم السري!");
             return;
         }
 
-        localStorage.setItem('activeSubject', subject);
-        localStorage.setItem('systemSecretCode', secret);
-        localStorage.setItem('lectureStartTime', new Date().getTime());
-        localStorage.setItem('attendanceRecords', JSON.stringify([]));
+        localStorage.setItem('lect_sub', sub);
+        localStorage.setItem('lect_pass', pass);
+        localStorage.setItem('lect_start', new Date().getTime());
+        localStorage.setItem('lect_records', JSON.stringify([]));
 
-        updateUI();
-        document.getElementById('subjectName').value = "";
-        document.getElementById('profSecretCode').value = "";
+        refreshScreen();
+        document.getElementById('subjectInput').value = "";
+        document.getElementById('secretInput').value = "";
     }
 
-    // تسجيل الطلاب وحفظهم فوراً وعرضهم بالأسفل
-    function submitStudentAttendance() {
-        checkExpiration();
-        const inputVal = document.getElementById('studentIdInput').value.trim();
-        const studentId = parseInt(inputVal);
+    // ضغطة الطالب: رصد الكود وإظهاره بالأسفل فوراً وتشغيل الصوت
+    function recordStudent() {
+        checkTimeExpired();
+        const codeVal = document.getElementById('studentCodeInput').value.trim();
+        const studentId = parseInt(codeVal);
 
-        if (inputVal.length !== 6 || isNaN(studentId)) {
-            alert("خطأ: يجب أن يتكون الكود الأكاديمي من 6 أرقام تماماً!");
+        if (codeVal.length !== 6 || isNaN(studentId)) {
+            alert("خطأ: الكود الأكاديمي يجب أن يكون 6 أرقام تماماً!");
             return;
         }
 
-        let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+        let records = JSON.parse(localStorage.getItem('lect_records')) || [];
         
+        // منع التسجيل المكرر
+        const isExist = records.some(item => item.id === studentId);
+        if (isExist) {
+            alert("تنبيه: هذا الكود مسجل حضور بالفعل بالأسفل!");
+            return;
+        }
+
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+        
+        records.push({ id: studentId, time: timeStr });
+        localStorage.setItem('lect_records', JSON.stringify(records));
+
+        makeTone(); // تشغيل الصوت فوراً
+        alert("تم تسجيل حضورك بنجاح وبقاء الشاشة ثابتة ✅");
+
+        document.getElementById('studentCodeInput').value = "";
+        refreshScreen(); // تحديث الجدول بالأسفل فوراً وبثبات تام
+    }
+
+    // إنهاء المحاضرة والعودة لشاشة الدكتور برقم الأمان
+    function endLectureManual() {
+        const savedPass = localStorage.getItem('lect_pass');
+        if (!savedPass) {
+            alert("لا توجد محاضرة نشطة حالياً.");
+            return;
+        }
+
+        const ask = prompt("أدخل رمز الأمان السري لإنهاء المحاضرة وتصفير الكشف:");
+        if (ask === savedPass) {
+            if (confirm("هل أنت متأكد من تصفير الكشف تماماً؟")) {
+                localStorage.clear();
+                refreshScreen();
+                alert("تم إنهاء المحاضرة بنجاح وجاهز لاستقبال محاضرة جديدة.");
+            }
+        } else if (ask !== null) {
+            alert("❌ رمز الأمان غير صحيح!");
+        }
+    }
+
+    window.onload = refreshScreen;
+</script>
+</body>
+</html>
