@@ -33,34 +33,20 @@
             border-color: #00d2ff;
             box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
         }
-        .form-control-lg::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
         .btn-modern-primary {
             background: linear-gradient(45deg, #00c6ff, #0072ff);
             border: none; color: #fff; border-radius: 15px; padding: 15px;
-            transition: all 0.3s ease;
-        }
-        .btn-modern-primary:hover {
-            transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 114, 255, 0.4);
+            font-weight: bold;
         }
         .btn-modern-success {
             background: linear-gradient(45deg, #11998e, #38ef7d);
             border: none; color: #fff; border-radius: 15px; padding: 15px;
-            transition: all 0.3s ease;
-        }
-        .btn-modern-success:hover {
-            transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 239, 125, 0.4);
+            font-weight: bold;
         }
         .student-row { 
             background: rgba(255, 255, 255, 0.05); 
             padding: 12px 20px; border-radius: 12px; margin-bottom: 8px; 
             border: 1px solid rgba(255, 255, 255, 0.05);
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         .alert-custom {
             background: rgba(0, 198, 255, 0.15); border: 1px solid #00c6ff; color: #00d2ff; border-radius: 15px;
@@ -80,34 +66,30 @@
     </div>
 
     <!-- 1️⃣ لوحة إعداد الدكتور -->
-    <div id="profSetupArea" class="main-card p-4 col-lg-6 mx-auto mb-4">
+    <div id="profSetupArea" class="main-card p-4 col-lg-6 mx-auto mb-4" style="display: block;">
         <h3 class="mb-4 text-center fw-bold" style="color: #38ef7d;">تهيئة محاضرة جديدة</h3>
-        <form id="profForm">
-            <div class="mb-3">
-                <label class="form-label fw-bold small text-white-50">اسم المادة / المحاضرة</label>
-                <input type="text" id="subjectName" class="form-control form-control-lg" required placeholder="مثال: هندسة إنشائية">
-            </div>
-            <div class="mb-4">
-                <label class="form-label fw-bold small text-white-50">رمز الأمان السري للمحاضرة</label>
-                <input type="password" id="profSecretCode" class="form-control form-control-lg text-center" required placeholder="أدخل الرقم السري للقفل">
-            </div>
-            <button type="submit" class="btn btn-modern-success w-100 fw-bold fs-5">تسجيل محاضرة جديدة وبدء الرصد</button>
-        </form>
+        <div class="mb-3">
+            <label class="form-label fw-bold small text-white-50">اسم المادة / المحاضرة</label>
+            <input type="text" id="subjectName" class="form-control form-control-lg" placeholder="مثال: هندسة إنشائية">
+        </div>
+        <div class="mb-4">
+            <label class="form-label fw-bold small text-white-50">رمز الأمان السري للمحاضرة</label>
+            <input type="password" id="profSecretCode" class="form-control form-control-lg text-center" placeholder="أدخل الرقم السري للقفل">
+        </div>
+        <button type="button" onclick="startLectureNow()" class="btn btn-modern-success w-100 fs-5">تسجيل محاضرة جديدة وبدء الرصد</button>
     </div>
 
     <!-- 2️⃣ شاشة تسجيل الطالب -->
     <div id="studentFormArea" class="main-card p-4 col-lg-6 mx-auto mb-4" style="display: none;">
         <h3 class="mb-3 text-center fw-bold">تسجيل حضور الجلسة</h3>
-        <div id="lectureAlert" class="alert alert-custom text-center mb-4">
+        <div class="alert alert-custom text-center mb-4">
             المادة النشطة الآن: <strong id="currentActiveSubject">--</strong>
         </div>
-        <form id="studentForm">
-            <div class="mb-4 text-start">
-                <label class="form-label fw-bold small text-white-50 ps-2">أدخل كودك الأكاديمي (6 أرقام)</label>
-                <input type="text" id="studentIdInput" maxlength="6" pattern="\d{6}" class="form-control form-control-lg text-center fs-3" required placeholder="000000">
-            </div>
-            <button type="submit" class="btn btn-modern-primary w-100 fw-bold fs-5">تأكيد حضورك الآن</button>
-        </form>
+        <div class="mb-4 text-start">
+            <label class="form-label fw-bold small text-white-50 ps-2">أدخل كودك الأكاديمي (6 أرقام)</label>
+            <input type="text" id="studentIdInput" maxlength="6" class="form-control form-control-lg text-center fs-3" placeholder="000000">
+        </div>
+        <button type="button" onclick="submitStudentAttendance()" class="btn btn-modern-primary w-100 fs-5">تأكيد حضورك الآن</button>
     </div>
 
     <!-- 3️⃣ كشف حضور الطلاب بالأسفل مباشرة -->
@@ -118,14 +100,14 @@
         </div>
     </div>
 
-    <!-- زر إنهاء المحاضرة -->
+    <!-- زر إنهاء المحاضرة للعودة للبداية -->
     <div class="text-center mt-5">
         <button class="btn btn-settings" onclick="resetSystemManual()">⚙️ إنهاء المحاضرة الحالية</button>
     </div>
 </div>
 
 <script>
-    // دالة الصوت المميز
+    // دالة الصوت المميز عند التسجيل
     function playNotificationSound() {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -151,7 +133,7 @@
         } catch(e) { console.log(e); }
     }
 
-    // فحص الـ 12 ساعة
+    // فحص الـ 12 ساعة ومسح البيانات تلقائياً
     function checkExpiration() {
         const startTime = localStorage.getItem('lectureStartTime');
         if (startTime) {
@@ -170,7 +152,7 @@
         localStorage.removeItem('attendanceRecords');
     }
 
-    // تحديث الشاشات باستخدام آليات ثابتة تماماً لمنع الاختفاء
+    // تحديث الشاشات والبيانات بالتبديل المباشر الصريح
     function updateUI() {
         checkExpiration();
         const subject = localStorage.getItem('activeSubject');
@@ -206,11 +188,15 @@
         }
     }
 
-    // حفظ المحاضرة وبدء الرصد فوراً
-    document.getElementById('profForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const subject = document.getElementById('subjectName').value;
-        const secret = document.getElementById('profSecretCode').value;
+    // الضغط الذكي لبدء المحاضرة (بدون فورم لتجنب الريفرش)
+    function startLectureNow() {
+        const subject = document.getElementById('subjectName').value.trim();
+        const secret = document.getElementById('profSecretCode').value.trim();
+
+        if (!subject || !secret) {
+            alert("خطأ: يرجى ملء اسم المادة ورمز الأمان أولاً!");
+            return;
+        }
 
         localStorage.setItem('activeSubject', subject);
         localStorage.setItem('systemSecretCode', secret);
@@ -218,6 +204,20 @@
         localStorage.setItem('attendanceRecords', JSON.stringify([]));
 
         updateUI();
-        document.getElementById('profForm').reset();
-    });
+        document.getElementById('subjectName').value = "";
+        document.getElementById('profSecretCode').value = "";
+    }
 
+    // تسجيل الطلاب وحفظهم فوراً وعرضهم بالأسفل
+    function submitStudentAttendance() {
+        checkExpiration();
+        const inputVal = document.getElementById('studentIdInput').value.trim();
+        const studentId = parseInt(inputVal);
+
+        if (inputVal.length !== 6 || isNaN(studentId)) {
+            alert("خطأ: يجب أن يتكون الكود الأكاديمي من 6 أرقام تماماً!");
+            return;
+        }
+
+        let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+        
