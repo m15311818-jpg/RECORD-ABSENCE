@@ -3,158 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة الحضور - المعهد العالي للهندسة</title>
+    <title>نظام الحضور الذكي - المعهد العالي للهندسة</title>
     <link href="https://jsdelivr.net" rel="stylesheet">
     <style>
         body { 
-            background: linear-gradient(135deg, #1e3c72, #2a5298, #0f2027); 
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             min-height: 100vh;
             color: #fff;
-            padding: 20px 0;
-        }
-        .wrapper {
-            min-height: 85vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 30px 0;
         }
         .main-card { 
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 25px; 
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            padding: 40px 30px;
-            width: 100%;
-            max-width: 500px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
         }
         .form-control-lg {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.15);
             color: #fff !important;
             border-radius: 15px;
-            font-size: 24px;
-            letter-spacing: 5px;
             font-weight: bold;
         }
         .form-control-lg:focus {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.2);
             border-color: #00d2ff;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
         }
         .form-control-lg::placeholder {
             color: rgba(255, 255, 255, 0.4);
-            letter-spacing: normal;
-            font-size: 18px;
         }
-        .btn-modern {
+        .btn-modern-primary {
             background: linear-gradient(45deg, #00c6ff, #0072ff);
-            border: none;
-            color: #fff;
-            border-radius: 15px;
-            padding: 15px;
-            font-size: 20px;
+            border: none; color: #fff; border-radius: 15px; padding: 15px;
             transition: all 0.3s ease;
         }
-        .btn-modern:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 114, 255, 0.5);
-            color: #fff;
+        .btn-modern-primary:hover {
+            transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 114, 255, 0.4);
         }
-        .engineering-icon {
-            font-size: 50px;
-            margin-bottom: 15px;
-            color: #00c6ff;
+        .btn-modern-success {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            border: none; color: #fff; border-radius: 15px; padding: 15px;
+            transition: all 0.3s ease;
         }
-        /* قسم الأستاذ بالأسفل */
-        .professor-section {
-            margin-top: 100px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 40px;
+        .btn-modern-success:hover {
+            transform: translateY(-2px); box-shadow: 0 8px 25px rgba(56, 239, 125, 0.4);
+        }
+        .student-row { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 12px 20px; border-radius: 12px; margin-bottom: 8px; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .alert-custom {
+            background: rgba(0, 198, 255, 0.15); border: 1px solid #00c6ff; color: #00d2ff; border-radius: 15px;
         }
         .btn-settings {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            border-radius: 12px;
-            padding: 10px 25px;
-            transition: all 0.3s ease;
-        }
-        .btn-settings:hover {
-            background: #fff;
-            color: #1e3c72;
-        }
-        .modal-content {
-            background: #14213d;
-            color: white;
-            border: 1px solid #00c6ff;
-            border-radius: 20px;
-        }
-        .student-item {
-            background: rgba(255,255,255,0.05);
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255,255,255,0.4); border-radius: 10px; padding: 5px 15px; font-size: 12px;
         }
     </style>
 </head>
 <body>
 
-<!-- الـ Wrapper لضمان توسط شاشة الطالب في البداية -->
-<div class="container wrapper">
-    <div class="main-card text-center">
-        <div class="engineering-icon">📐</div>
-        <h2 class="fw-bold mb-2">المعهد العالي للهندسة</h2>
-        <p class="text-white-50 mb-4">نظام تسجيل حضور الطلاب الذكي</p>
-        
-        <!-- نموذج تسجيل الحضور للطالب واضح ومباشر -->
-        <form id="studentForm">
-            <div class="mb-4 text-start">
-                <label class="form-label fw-bold small text-white-50 ps-2">أدخل كودك الأكاديمي المكون من 6 أرقام</label>
-                <input type="text" id="studentIdInput" maxlength="6" pattern="\d{6}" class="form-control form-control-lg text-center" required placeholder="000000">
+<div class="container">
+    <div class="text-center mb-4">
+        <h1 class="fw-bold" style="background: linear-gradient(to right, #00c6ff, #0072ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">المعهد العالي للهندسة</h1>
+        <p class="text-white-50" id="systemSubhesder">نظام الحضور الرقمي للمحاضرات</p>
+    </div>
+
+    <!-- 1️⃣ أولاً: لوحة إعداد الدكتور (تختفي بعد البدء) -->
+    <div id="profSetupArea" class="main-card p-4 col-lg-6 mx-auto mb-4">
+        <h3 class="mb-4 text-center fw-bold" style="color: #38ef7d;">تهيئة محاضرة جديدة</h3>
+        <form id="profForm">
+            <div class="mb-3">
+                <label class="form-label fw-bold small text-white-50">اسم المادة / المحاضرة</label>
+                <input type="text" id="subjectName" class="form-control form-control-lg" required placeholder="مثال: هندسة إنشائية">
             </div>
-            <button type="submit" class="btn btn-modern w-100 fw-bold">تأكيد تسجيل الحضور الآن</button>
+            <div class="mb-4">
+                <label class="form-label fw-bold small text-white-50">رمز الأمان السري للمحاضرة</label>
+                <input type="password" id="profSecretCode" class="form-control form-control-lg text-center" required placeholder="أدخل الرقم السري للقفل">
+            </div>
+            <button type="submit" class="btn btn-modern-success w-100 fw-bold fs-5">تسجيل محاضرة جديدة وبدء الرصد</button>
         </form>
     </div>
-</div>
 
-<!-- النزول للأسفل: لوحة تحكم الأستاذ -->
-<div class="container text-center professor-section mb-5">
-    <p class="text-white-50 small mb-2">لوحة تحكم خاصة بعضو هيئة التدريس</p>
-    <button class="btn btn-settings fw-bold" onclick="askForPassword()">⚙️ إعدادات ورصد كشف المحاضرة</button>
-</div>
-
-<!-- النافذة المنبثقة المحمية برمز الأمان للأستاذ -->
-<div class="modal fade" id="professorModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content p-3">
-      <div class="modal-header border-0">
-        <h5 class="modal-title fw-bold text-info">📋 لوحة التحكم وكشف الحضور النشط</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-white-50 small" id="timerInfo">المؤقت نشط وسيتم التصفير تلقائياً بعد 12 ساعة.</span>
-            <button class="btn btn-danger btn-sm rounded-3" onclick="clearRecordsManual()">🗑️ مسح الكشف حالياً</button>
+    <!-- 2️⃣ ثانياً: شاشة تسجيل الطالب (تظهر فقط عند وجود محاضرة نشطة) -->
+    <div id="studentFormArea" class="main-card p-4 col-lg-6 mx-auto mb-4 d-none">
+        <h3 class="mb-3 text-center fw-bold">تسجيل حضور الجلسة</h3>
+        <div id="lectureAlert" class="alert alert-custom text-center mb-4">
+            المادة النشطة الآن: <strong id="currentActiveSubject">--</strong>
         </div>
-        <div id="attendanceList" style="max-height: 350px; overflow-y: auto;" class="p-2">
-            <!-- كشف الأكواد يظهر هنا للأستاذ فقط -->
-        </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button type="button" class="btn btn-secondary w-100 rounded-3" data-bs-dismiss="modal">إغلاق اللوحة</button>
-      </div>
+        <form id="studentForm">
+            <div class="mb-4 text-start">
+                <label class="form-label fw-bold small text-white-50 ps-2">أدخل كودك الأكاديمي (6 أرقام)</label>
+                <input type="text" id="studentIdInput" maxlength="6" pattern="\d{6}" class="form-control form-control-lg text-center fs-3" required placeholder="000000">
+            </div>
+            <button type="submit" class="btn btn-modern-primary w-100 fw-bold fs-5">تأكيد حضورك الآن</button>
+        </form>
     </div>
-  </div>
+
+    <!-- 3️⃣ ثالثاً: كشف حضور الطلاب (يظهر أسفل خانة التسجيل مباشرة) -->
+    <div id="attendanceReportArea" class="main-card p-4 col-lg-6 mx-auto d-none">
+        <h4 class="mb-4 fw-bold text-center" style="color: #00c6ff;">📋 الطلاب الحاضرين حالياً</h4>
+        <div id="attendanceList" style="max-height: 300px; overflow-y: auto;">
+            <!-- قائمة الطلاب تضاف هنا ديناميكياً -->
+        </div>
+    </div>
+
+    <!-- زر تحكم جانبي بالأسفل لإعادة تصفير النظام -->
+    <div class="text-center mt-5">
+        <button class="btn btn-settings" onclick="resetSystemManual()">⚙️ إنهاء المحاضرة الحالية</button>
+    </div>
 </div>
 
 <script>
-    // 🔑 رمز الأمان المخصص للأستاذ لرؤية الكشف (يمكنك تغييره هنا)
-    const PROFESSOR_SECRET_PASSWORD = "1234";
-
+    // دالة الصوت المميز عند تسجيل الطالب
     function playNotificationSound() {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -162,88 +133,85 @@
             const gain1 = audioCtx.createGain();
             osc1.type = 'sine';
             osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-            osc1.connect(gain1);
-            gain1.connect(audioCtx.destination);
+            osc1.connect(gain1); gain1.connect(audioCtx.destination);
             gain1.gain.setValueAtTime(0.1, audioCtx.currentTime);
             gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-            osc1.start();
-            osc1.stop(audioCtx.currentTime + 0.15);
+            osc1.start(); osc1.stop(audioCtx.currentTime + 0.15);
             
             setTimeout(() => {
                 const osc2 = audioCtx.createOscillator();
                 const gain2 = audioCtx.createGain();
                 osc2.type = 'sine';
                 osc2.frequency.setValueAtTime(880, audioCtx.currentTime);
-                osc2.connect(gain2);
-                gain2.connect(audioCtx.destination);
+                osc2.connect(gain2); gain2.connect(audioCtx.destination);
                 gain2.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
-                osc2.start();
-                osc2.stop(audioCtx.currentTime + 0.25);
+                osc2.start(); osc2.stop(audioCtx.currentTime + 0.25);
             }, 100);
         } catch(e) { console.log(e); }
     }
 
+    // دالة التحقق من الـ 12 ساعة ومسح الكشوفات تلقائياً
     function checkExpiration() {
         const startTime = localStorage.getItem('lectureStartTime');
         if (startTime) {
             const currentTime = new Date().getTime();
             const twelveHoursInMs = 12 * 60 * 60 * 1000;
             if ((currentTime - startTime) > twelveHoursInMs) {
-                localStorage.removeItem('attendanceRecords');
-                localStorage.removeItem('lectureStartTime');
+                clearAllData();
             }
         }
     }
 
-    // دالة طلب كلمة المرور لفتح الكشف للأستاذ
-    function askForPassword() {
-        const passwordInput = prompt("الرجاء إدخال رمز الأمان السري لعرض الكشف:");
-        
-        if (passwordInput === PROFESSOR_SECRET_PASSWORD) {
-            showAttendanceRecords();
-        } else if (passwordInput !== null) {
-            alert("❌ رمز الأمان غير صحيح! لا يمكن عرض كشف الحضور.");
-        }
+    function clearAllData() {
+        localStorage.removeItem('activeSubject');
+        localStorage.removeItem('systemSecretCode');
+        localStorage.removeItem('lectureStartTime');
+        localStorage.removeItem('attendanceRecords');
     }
 
-    // دالة توليد وعرض كشف حضور الطلاب داخل نافذة الإعدادات
-    function showAttendanceRecords() {
+    // تحديث الشاشة والتحكم بالظهور والاختفاء
+    function updateUI() {
         checkExpiration();
+        const subject = localStorage.getItem('activeSubject');
         const records = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+
+        const setupArea = document.getElementById('profSetupArea');
+        const studentArea = document.getElementById('studentFormArea');
+        const reportArea = document.getElementById('attendanceReportArea');
         const listDiv = document.getElementById('attendanceList');
-        listDiv.innerHTML = "";
 
-        if (records.length === 0) {
-            listDiv.innerHTML = "<p class='text-white-50 text-center py-4'>لا يوجد أي حضور مسجل لهذه المحاضرة حتى الآن.</p>";
+        if (subject) {
+            // المحاضرة بدأت: إخفاء لوحة الدكتور وإظهار شاشة الطلاب والكشف بالأسفل
+            setupArea.classList.add('d-none');
+            studentArea.classList.remove('d-none');
+            reportArea.classList.remove('d-none');
+            document.getElementById('currentActiveSubject').innerText = subject;
+
+            // بناء جدول الغياب بالأسفل
+            listDiv.innerHTML = "";
+            if (records.length === 0) {
+                listDiv.innerHTML = "<p class='text-white-50 text-center py-3' id='emptyMsg'>لا توجد تسجيلات حضور حتى الآن.</p>";
+            } else {
+                records.forEach((rec, idx) => {
+                    listDiv.innerHTML += `
+                        <div class="student-row d-flex justify-content-between align-items-center">
+                            <span class="fw-bold" style="color: #00d2ff;">👤 م: ${idx+1} &nbsp;|&nbsp; كود الطالب: ${rec.id}</span>
+                            <span class="badge bg-light bg-opacity-10 text-white-50 p-2">⏰ ${rec.time}</span>
+                        </div>`;
+                });
+            }
         } else {
-            records.forEach((rec, index) => {
-                listDiv.innerHTML += `
-                    <div class="student-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold text-info">👤 الرقم: ${index + 1} &nbsp;&nbsp;|&nbsp;&nbsp; كود الطالب: ${rec.id}</span>
-                        <span class="badge bg-light bg-opacity-10 text-white-50 p-2">⏰ ${rec.time}</span>
-                    </div>`;
-            });
-        }
-        var myModal = new bootstrap.Modal(document.getElementById('professorModal'));
-        myModal.show();
-    }
-
-    // ميزة مسح الكشف يدوياً للأستاذ
-    function clearRecordsManual() {
-        if (confirm("هل أنت متأكد من رغبتك في تصفير ومسح كشف الحضور الحالي بالكامل؟")) {
-            localStorage.removeItem('attendanceRecords');
-            localStorage.removeItem('lectureStartTime');
-            document.getElementById('attendanceList').innerHTML = "<p class='text-white-50 text-center py-4'>تم مسح وتصفير الكشف بنجاح.</p>";
-            alert("تم تصفير النظام وجاهز لاستقبال كشوفات جديدة 👍");
+            // لا توجد محاضرة: إظهار لوحة إعداد الدكتور فقط وإخفاء الباقي
+            setupArea.classList.remove('d-none');
+            studentArea.classList.add('d-none');
+            reportArea.classList.add('d-none');
         }
     }
 
-    // معالجة تسجيل نموذج الطالب
-    document.getElementById('studentForm').addEventListener('submit', (e) => {
+    // ضغطة الدكتور: تفعيل الجلسة وإخفاء الواجهة الحالية
+    document.getElementById('profForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        checkExpiration();
+        const subject = document.getElementById('subjectName').value;
 
-        const inputVal = document.getElementById('studentIdInput').value;
-        const studentId = parseInt(inputVal);
-
+                                                         
