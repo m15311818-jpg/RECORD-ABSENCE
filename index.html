@@ -11,10 +11,13 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             min-height: 100vh;
             color: #fff;
+            padding: 20px 0;
+        }
+        .wrapper {
+            min-height: 85vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
         .main-card { 
             background: rgba(255, 255, 255, 0.1);
@@ -65,42 +68,52 @@
             margin-bottom: 15px;
             color: #00c6ff;
         }
-        /* منطقة الزر المخفي */
-        #secretArea {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            cursor: default;
-            background: transparent;
+        /* قسم الأستاذ بالأسفل */
+        .professor-section {
+            margin-top: 100px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 40px;
+        }
+        .btn-settings {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            border-radius: 12px;
+            padding: 10px 25px;
+            transition: all 0.3s ease;
+        }
+        .btn-settings:hover {
+            background: #fff;
+            color: #1e3c72;
         }
         .modal-content {
-            background: #1a2a4a;
+            background: #14213d;
             color: white;
             border: 1px solid #00c6ff;
             border-radius: 20px;
         }
         .student-item {
             background: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 5px;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
             border: 1px solid rgba(255,255,255,0.05);
         }
     </style>
 </head>
 <body>
 
-<div class="container d-flex justify-content-center">
+<!-- الـ Wrapper لضمان توسط شاشة الطالب في البداية -->
+<div class="container wrapper">
     <div class="main-card text-center">
         <div class="engineering-icon">📐</div>
         <h2 class="fw-bold mb-2">المعهد العالي للهندسة</h2>
         <p class="text-white-50 mb-4">نظام تسجيل حضور الطلاب الذكي</p>
         
+        <!-- نموذج تسجيل الحضور للطالب واضح ومباشر -->
         <form id="studentForm">
             <div class="mb-4 text-start">
-                <label class="form-label fw-bold small text-white-50 ps-2">أدخل كودك الأكاديمي (6 أرقام)</label>
+                <label class="form-label fw-bold small text-white-50 ps-2">أدخل كودك الأكاديمي المكون من 6 أرقام</label>
                 <input type="text" id="studentIdInput" maxlength="6" pattern="\d{6}" class="form-control form-control-lg text-center" required placeholder="000000">
             </div>
             <button type="submit" class="btn btn-modern w-100 fw-bold">تأكيد تسجيل الحضور الآن</button>
@@ -108,30 +121,40 @@
     </div>
 </div>
 
-<!-- المنطقة المخفية للدكتور في أسفل الشاشة تماماً -->
-<div id="secretArea" onclick="doctorClick()"></div>
+<!-- النزول للأسفل: لوحة تحكم الأستاذ -->
+<div class="container text-center professor-section mb-5">
+    <p class="text-white-50 small mb-2">لوحة تحكم خاصة بعضو هيئة التدريس</p>
+    <button class="btn btn-settings fw-bold" onclick="askForPassword()">⚙️ إعدادات ورصد كشف المحاضرة</button>
+</div>
 
-<!-- النافذة المنبثقة لرؤية الحضور (تفتح للدكتور فقط) -->
-<div class="modal fade" id="professorModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+<!-- النافذة المنبثقة المحمية برمز الأمان للأستاذ -->
+<div class="modal fade" id="professorModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content p-3">
       <div class="modal-header border-0">
-        <h5 class="modal-title fw-bold text-info">📋 كشف حضور المحاضرة الحالية</h5>
+        <h5 class="modal-title fw-bold text-info">📋 لوحة التحكم وكشف الحضور النشط</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div id="attendanceList" style="max-height: 300px; overflow-y: auto;">
-            <!-- الأكواد ستظهر هنا -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-white-50 small" id="timerInfo">المؤقت نشط وسيتم التصفير تلقائياً بعد 12 ساعة.</span>
+            <button class="btn btn-danger btn-sm rounded-3" onclick="clearRecordsManual()">🗑️ مسح الكشف حالياً</button>
+        </div>
+        <div id="attendanceList" style="max-height: 350px; overflow-y: auto;" class="p-2">
+            <!-- كشف الأكواد يظهر هنا للأستاذ فقط -->
         </div>
       </div>
       <div class="modal-footer border-0">
-        <button type="button" class="btn btn-secondary w-100 rounded-3" data-bs-dismiss="modal">إغلاق الكشف</button>
+        <button type="button" class="btn btn-secondary w-100 rounded-3" data-bs-dismiss="modal">إغلاق اللوحة</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
+    // 🔑 رمز الأمان المخصص للأستاذ لرؤية الكشف (يمكنك تغييره هنا)
+    const PROFESSOR_SECRET_PASSWORD = "1234";
+
     function playNotificationSound() {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -173,18 +196,18 @@
         }
     }
 
-    // نظام النقرات المخفي لفتح الكشف للأستاذ
-    let clickCount = 0;
-    function doctorClick() {
-        clickCount++;
-        if (clickCount === 3) { // عند الضغط 3 مرات متتالية بأسفل الشاشة
-            clickCount = 0;
+    // دالة طلب كلمة المرور لفتح الكشف للأستاذ
+    function askForPassword() {
+        const passwordInput = prompt("الرجاء إدخال رمز الأمان السري لعرض الكشف:");
+        
+        if (passwordInput === PROFESSOR_SECRET_PASSWORD) {
             showAttendanceRecords();
+        } else if (passwordInput !== null) {
+            alert("❌ رمز الأمان غير صحيح! لا يمكن عرض كشف الحضور.");
         }
-        setTimeout(() => { clickCount = 0; }, 2000); // تصفير العداد بعد ثانيتين
     }
 
-    // دالة عرض الأكواد المخزنة في المتصفح بداخل الجدول المنبثق
+    // دالة توليد وعرض كشف حضور الطلاب داخل نافذة الإعدادات
     function showAttendanceRecords() {
         checkExpiration();
         const records = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
@@ -192,13 +215,13 @@
         listDiv.innerHTML = "";
 
         if (records.length === 0) {
-            listDiv.innerHTML = "<p class='text-white-50 text-center py-3'>لا يوجد أي حضور مسجل حالياً.</p>";
+            listDiv.innerHTML = "<p class='text-white-50 text-center py-4'>لا يوجد أي حضور مسجل لهذه المحاضرة حتى الآن.</p>";
         } else {
-            records.forEach(rec => {
+            records.forEach((rec, index) => {
                 listDiv.innerHTML += `
                     <div class="student-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold text-info">👤 كود الطالب: ${rec.id}</span>
-                        <span class="badge bg-dark text-white-50">${rec.time}</span>
+                        <span class="fw-bold text-info">👤 الرقم: ${index + 1} &nbsp;&nbsp;|&nbsp;&nbsp; كود الطالب: ${rec.id}</span>
+                        <span class="badge bg-light bg-opacity-10 text-white-50 p-2">⏰ ${rec.time}</span>
                     </div>`;
             });
         }
@@ -206,6 +229,17 @@
         myModal.show();
     }
 
+    // ميزة مسح الكشف يدوياً للأستاذ
+    function clearRecordsManual() {
+        if (confirm("هل أنت متأكد من رغبتك في تصفير ومسح كشف الحضور الحالي بالكامل؟")) {
+            localStorage.removeItem('attendanceRecords');
+            localStorage.removeItem('lectureStartTime');
+            document.getElementById('attendanceList').innerHTML = "<p class='text-white-50 text-center py-4'>تم مسح وتصفير الكشف بنجاح.</p>";
+            alert("تم تصفير النظام وجاهز لاستقبال كشوفات جديدة 👍");
+        }
+    }
+
+    // معالجة تسجيل نموذج الطالب
     document.getElementById('studentForm').addEventListener('submit', (e) => {
         e.preventDefault();
         checkExpiration();
@@ -213,38 +247,3 @@
         const inputVal = document.getElementById('studentIdInput').value;
         const studentId = parseInt(inputVal);
 
-        if (inputVal.length !== 6 || isNaN(studentId)) {
-            alert("خطأ: يجب أن يتكون الكود الأكاديمي من 6 أرقام تماماً!");
-            return;
-        }
-
-        let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
-        
-        if (attendanceRecords.length === 0) {
-            localStorage.setItem('lectureStartTime', new Date().getTime());
-        }
-
-        const alreadyRegistered = attendanceRecords.some(rec => rec.id === studentId);
-        if (alreadyRegistered) {
-            alert("تنبيه: لقد تم تسجيل حضور هذا الكود مسبقاً في هذه الجلسة!");
-            return;
-        }
-
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
-        attendanceRecords.push({ id: studentId, time: timeString });
-        
-        localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
-
-        playNotificationSound();
-
-        alert(`تم رصد وتأكيد حضورك بنجاح ✅`);
-        document.getElementById('studentForm').reset();
-    });
-
-    window.onload = checkExpiration;
-</script>
-
-<script src="https://jsdelivr.net"></script>
-</body>
-</html>
