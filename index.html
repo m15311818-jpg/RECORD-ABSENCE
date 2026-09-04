@@ -14,6 +14,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
         .main-card { 
             background: rgba(255, 255, 255, 0.1);
@@ -64,6 +65,29 @@
             margin-bottom: 15px;
             color: #00c6ff;
         }
+        /* منطقة الزر المخفي */
+        #secretArea {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            cursor: default;
+            background: transparent;
+        }
+        .modal-content {
+            background: #1a2a4a;
+            color: white;
+            border: 1px solid #00c6ff;
+            border-radius: 20px;
+        }
+        .student-item {
+            background: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
     </style>
 </head>
 <body>
@@ -84,8 +108,30 @@
     </div>
 </div>
 
+<!-- المنطقة المخفية للدكتور في أسفل الشاشة تماماً -->
+<div id="secretArea" onclick="doctorClick()"></div>
+
+<!-- النافذة المنبثقة لرؤية الحضور (تفتح للدكتور فقط) -->
+<div class="modal fade" id="professorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold text-info">📋 كشف حضور المحاضرة الحالية</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="attendanceList" style="max-height: 300px; overflow-y: auto;">
+            <!-- الأكواد ستظهر هنا -->
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary w-100 rounded-3" data-bs-dismiss="modal">إغلاق الكشف</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-    // دالة النغمة الصوتية المميزة عند تأكيد الحضور
     function playNotificationSound() {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -115,7 +161,6 @@
         } catch(e) { console.log(e); }
     }
 
-    // دالة الحذف والمسح التلقائي بعد 12 ساعة
     function checkExpiration() {
         const startTime = localStorage.getItem('lectureStartTime');
         if (startTime) {
@@ -128,7 +173,39 @@
         }
     }
 
-    // معالجة الضغط وإرسال البيانات
+    // نظام النقرات المخفي لفتح الكشف للأستاذ
+    let clickCount = 0;
+    function doctorClick() {
+        clickCount++;
+        if (clickCount === 3) { // عند الضغط 3 مرات متتالية بأسفل الشاشة
+            clickCount = 0;
+            showAttendanceRecords();
+        }
+        setTimeout(() => { clickCount = 0; }, 2000); // تصفير العداد بعد ثانيتين
+    }
+
+    // دالة عرض الأكواد المخزنة في المتصفح بداخل الجدول المنبثق
+    function showAttendanceRecords() {
+        checkExpiration();
+        const records = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+        const listDiv = document.getElementById('attendanceList');
+        listDiv.innerHTML = "";
+
+        if (records.length === 0) {
+            listDiv.innerHTML = "<p class='text-white-50 text-center py-3'>لا يوجد أي حضور مسجل حالياً.</p>";
+        } else {
+            records.forEach(rec => {
+                listDiv.innerHTML += `
+                    <div class="student-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-info">👤 كود الطالب: ${rec.id}</span>
+                        <span class="badge bg-dark text-white-50">${rec.time}</span>
+                    </div>`;
+            });
+        }
+        var myModal = new bootstrap.Modal(document.getElementById('professorModal'));
+        myModal.show();
+    }
+
     document.getElementById('studentForm').addEventListener('submit', (e) => {
         e.preventDefault();
         checkExpiration();
@@ -141,30 +218,24 @@
             return;
         }
 
-        // جلب السجلات الحالية أو إنشاء قائمة جديدة
         let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
         
-        // إذا كانت القائمة فارغة تماماً (أول طالب يسجل)، نضبط مؤقت الـ 12 ساعة من الآن
         if (attendanceRecords.length === 0) {
             localStorage.setItem('lectureStartTime', new Date().getTime());
         }
 
-        // منع الطالب من تسجيل نفسه مرتين
         const alreadyRegistered = attendanceRecords.some(rec => rec.id === studentId);
         if (alreadyRegistered) {
             alert("تنبيه: لقد تم تسجيل حضور هذا الكود مسبقاً في هذه الجلسة!");
             return;
         }
 
-        // إضافة الطالب الجديد
         const now = new Date();
         const timeString = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
         attendanceRecords.push({ id: studentId, time: timeString });
         
-        // حفظ البيانات في ذاكرة الهاتف/الموقع بشكل دائم ومستمر
         localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
 
-        // تشغيل صوت الإرسال بنجاح
         playNotificationSound();
 
         alert(`تم رصد وتأكيد حضورك بنجاح ✅`);
